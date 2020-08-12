@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Total = (props) => {
-    return <p>Number of exercises: {props.sum.exercises1 + props.sum.exercises2 + props.sum.exercises3} </p> 
+    return <p>Number of exercises: {props.part1.exercises + props.part2.exercises + props.part3.exercises} </p> 
 }
 
 export default Total; 
