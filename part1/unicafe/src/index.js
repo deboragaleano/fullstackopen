@@ -1,18 +1,7 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-
-const Button = (props) => {
-    return <button onClick={props.handleClick}>{props.text}</button>
-}
-
-const Statistics = (props) => {
-    return (
-    <div>
-      <p>Total number of collected feedback: {props.sum}</p>
-      <p>Average Score: {props.avg}</p>
-      <p>Positive feedback: {props.positive} %</p>
-    </div>)
-}
+import Statistics from './Statistics'; 
+import Button from './Button'; 
 
 const App = () => {
   const [good, setGood] = useState(0); 
@@ -45,14 +34,14 @@ const App = () => {
 
       <h1>Statistics</h1>
       {sumFeedback === 0 ? 'No feedback yet' :  
-      <div>
-        <p>Good = {good}</p>
-        <p>Neutral = {neutral}</p>
-        <p>Bad = {bad}</p>
-        
-        <h2>More statistics</h2>
-        <Statistics sum={sumFeedback} avg={averageScore} positive={positiveFeedback}/>
-      </div>
+        <>
+        <Statistics text='Good' value={good}/>
+        <Statistics text='Neutral' value={neutral} />
+        <Statistics text='Bad' value={bad} />
+        <Statistics text='Total number of collected feedback' value={sumFeedback} />
+        <Statistics text='Average score' value={averageScore} />
+        <Statistics text='Positive feedback' value={positiveFeedback} />
+        </>
       }
     </div>
   )
