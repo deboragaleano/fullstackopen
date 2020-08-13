@@ -22,6 +22,10 @@ const App = () => {
     setBad(newValue); 
   }
 
+  const sumFeedback = good + neutral + bad
+  const averageScore = (good - bad) / sumFeedback; 
+  const positiveFeedback = good * 100 / sumFeedback; 
+
   return (
     <div>
       
@@ -31,11 +35,14 @@ const App = () => {
       <Button handleClick={() => handleClickBad(bad + 1)} text='bad'/>
 
       <h1>Statistics</h1>
-      
       <p>Good = {good}</p>
       <p>Neutral = {neutral}</p>
       <p>Bad = {bad}</p>
 
+      <h2>More statistics</h2>
+      <p>Total number of collected feedback: {sumFeedback}</p>
+      <p>Average Score: {averageScore}</p>
+      <p>Positive feedback: {positiveFeedback} %</p>
     </div>
   )
 }
