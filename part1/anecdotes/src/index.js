@@ -15,18 +15,26 @@ const App = ({anecdotes}) => {
   const handleVotes  = () => {
       const copyArr = [...votes];
       copyArr[selected] += 1
-      setVotes(copyArr)
-      // console.log(copyArr); 
+      setVotes(copyArr);
   }
+
+  const maxNum = Math.max(...votes);
+
+  const indexMax = votes.indexOf(Math.max(...votes));
+
 
   return (
       <div>
-          <h1>{anecdotes[selected]}</h1>
+          <h1>Anecdotes of the day</h1>
+          <p>{anecdotes[selected]}</p>
         <div>
           <button onClick={handleVotes}>Vote</button>
           <button onClick={handleRandomAnecdote}>Get anecdote</button>
           <p>has {votes[selected]} votes</p>
         </div>
+        <h1>Anecdote with most votes</h1>
+          <p>{anecdotes[indexMax]}</p>
+          <p>has {maxNum} votes</p>
       </div>
   )
 }
