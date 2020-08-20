@@ -1,7 +1,7 @@
 import React from 'react'
 
-const Total = (props) => {
-    const sum = props.parts.reduce((accum, part) => (
+const Total = ({parts}) => {
+    const sum = parts.reduce((accum, part) => (
         accum + part.exercises 
     ), 0); 
 
