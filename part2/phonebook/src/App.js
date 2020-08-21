@@ -10,9 +10,10 @@ const App = () => {
     e.preventDefault();
     const nameToAdd = {name: newName}
     setPersons([...persons, nameToAdd])
+    setNewName(''); 
   }
 
-  const handleName = (e) => {
+  const handleNameChange = (e) => {
     setNewName(e.target.value)
   }
 
@@ -23,19 +24,17 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input value={newName} onChange={handleName}/>
+          name: <input value={newName} onChange={handleNameChange}/>
         </div>
         <div>
           <button onClick={addName} type="submit">add</button>
         </div>
       </form>
       
-      <h2>Names</h2>
+      <h2>Numbers</h2>
         <ul>
           {persons.map(person => <li key={person.name}>{person.name}</li>)}
         </ul>
-      <h2>Numbers</h2>
-      <div>debug: {newName}</div>
     </div>
   )
 }
