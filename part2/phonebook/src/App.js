@@ -9,15 +9,16 @@ const App = () => {
   const addName = (e) => {
     e.preventDefault();
     const nameToAdd = {name: newName}
+    const isTheSame = person => person.name === nameToAdd.name;  
+    persons.every(isTheSame) ? alert(`${newName}is already added to the phonebook`) : 
     setPersons([...persons, nameToAdd])
     setNewName(''); 
   }
 
+
   const handleNameChange = (e) => {
     setNewName(e.target.value)
   }
-
-    // console.log(new);
 
   return (
     <div>
