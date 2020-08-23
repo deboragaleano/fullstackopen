@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas' },
+    { name: 'Debora' }
   ]) 
   const [ newName, setNewName ] = useState('')
 
   const addName = (e) => {
     e.preventDefault();
     const nameToAdd = {name: newName}
-    const isTheSame = person => person.name === nameToAdd.name;  
-    persons.every(isTheSame) ? alert(`${newName}is already added to the phonebook`) : 
+    const pName = persons.map(p => p.name);
+    const isTheSame = pName.indexOf(newName) !== -1;
+    isTheSame ? alert(`${newName} is already added to the phonebook`) : 
     setPersons([...persons, nameToAdd])
     setNewName(''); 
   }
