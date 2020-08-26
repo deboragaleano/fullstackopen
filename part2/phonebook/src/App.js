@@ -1,5 +1,44 @@
 import React, { useState } from 'react'; 
 
+const Search = ({query, handleSearch, searchContact}) => {
+  return (
+    <div>
+      filter shown with 
+      <input 
+        value={query} 
+        onChange={handleSearch}/>
+      <button 
+        onClick={searchContact} 
+        type="submit">search</button>
+    </div>  
+  )
+}
+
+const PersonFrom = ({name, number, nameChange, addContact, numberChange}) => {
+  return (
+    <form>
+      <div>
+        name: <input value={name} onChange={nameChange}/>
+      </div>
+      <div>
+        number: <input value={number} onChange={numberChange}/>
+      </div>
+      <div>
+        <button onClick={addContact} type="submit">add</button>
+      </div>
+  </form>
+  )
+}
+
+const Persons = ({persons}) => {
+  return (
+  <ul>
+    {persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+  </ul>
+  )
+}
+
+
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas', number: '0394485' },
@@ -24,7 +63,8 @@ const App = () => {
 
   const searchContact = (e) => {
     e.preventDefault(); 
-    const filteredNames = persons.filter(person => person.name.toLowerCase().includes((newSearch).toLowerCase()))
+    const filteredNames = persons.filter(person => person.name.toLowerCase().includes((newSearch)
+    .toLowerCase()))
     setPersons(filteredNames); 
     setNewSearch(''); 
   }
@@ -43,31 +83,35 @@ const App = () => {
 
   return (
     <div>
+
       <h1>Phonebook</h1>
-      <div>
-        filter shown with <input value={newSearch} onChange={handleSearchName}/>
-        <button onClick={searchContact} type="submit">search</button>
-      </div>
-      <form>
-        <h2>Add new</h2>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button onClick={addContact} type="submit">add</button>
-        </div>
-      </form>
+      <Search 
+        query={newSearch} 
+        handleSearch={handleSearchName} 
+        searchContact={searchContact}
+      />
+      
+      <h2>Add new</h2>
+      <PersonFrom 
+        name={newName} 
+        number={newNumber} 
+        addContact={addContact}
+        nameChange={handleNameChange}
+        numberChange={handleNumberChange}
+      />
       
       <h2>Numbers</h2>
-        <ul>
-          {persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
-        </ul>
-        
+      <Persons persons={persons}/>
     </div>
   )
 }
 
 export default App
+
+/*
+TO DO:
+
+ - fix the filter search input to not use a button
+ - fix the filter to return results with first name only (not the whole string)
+
+*/
