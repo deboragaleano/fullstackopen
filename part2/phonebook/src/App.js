@@ -3,15 +3,12 @@ import axios from 'axios';
 
 const Search = ({query, handleSearch, searchContact}) => {
   return (
-    <div>
+    <form onSubmit={searchContact}>
       filter shown with 
       <input 
         value={query} 
         onChange={handleSearch}/>
-      <button 
-        onClick={searchContact} 
-        type="submit">search</button>
-    </div>  
+    </form>  
   )
 }
 
@@ -114,7 +111,6 @@ export default App
 /*
 TO DO:
 
- - fix the filter search input to not use a button
  - fix the filter to return results with first name only (not the whole string)
 
 */
