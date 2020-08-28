@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios'
+import Country from './Country'
+import Countries from './Countries'
 
 function App() {
   const [countries, setCountries] = useState([])
@@ -21,22 +23,12 @@ function App() {
     setCountry(e.target.value)
   }
 
-  const condiDisplay = 
-      countries.length > 10 
-      ? <p>Too many matches, specify another</p> 
-      : countries.length <= 10 && countries.length > 1 
-      ? countries.map(c => <p key={c.alpha2Code}>{c.name}</p>)
-      : countries.length === 1 
-      ? countries.map(c => 
-          <div key={c.alpha2Code}>
-            <h1>{c.name}</h1> 
-            <p>capital: {c.capital}</p> 
-            <p>population: {c.population}</p> 
-            <h2>Languages</h2>
-              {c.languages.map(l => <li key={l.iso639_1}>{l.name}</li>)}
-            <img style={{width: '50%'}}src={c.flag} alt={c.name}/>
-          </div>)
-        : '';
+  const showCountry = (id) => {
+    const clickedCountry = countries.filter(country => 
+      country.alpha2Code === id ? country : ''
+    )
+    setCountries(clickedCountry)
+  }
 
   return (
     <div className="App">
@@ -48,9 +40,22 @@ function App() {
             onChange={handleSearch}
           /> 
         </form>
-        {condiDisplay}
+        {
+          countries.length > 10 
+          ? <p>Too many matches, specify another</p> 
+          : countries.length <= 10 && countries.length > 1 
+          ? <Countries countries={countries} show={showCountry}/>
+          : countries.length === 1 
+          ? countries.map(c => <Country key={c.alpha2Code} country={c}/>)
+          : ''
+        }
     </div>
   );
 }
 
 export default App;
+
+/**
+ * TODO 
+ *  - Refactor the 'empty string' there on ShowCountry and on conditional rendering
+ */
