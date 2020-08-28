@@ -8,11 +8,11 @@ function App() {
   const [country, setCountry] = useState('')
 
   useEffect(() => {
-    axios
-      .get(`https://restcountries.eu/rest/v2/name/${country}`)
-      .then(response => {
-        setCountries(response.data)
-      })
+    async function getCountries() {
+      const response = await axios.get(`https://restcountries.eu/rest/v2/name/${country}`)
+      setCountries(response.data)
+    }
+    getCountries();
   }, [country])
 
   const searchCountry = (e) => {
@@ -47,7 +47,7 @@ function App() {
           ? <Countries countries={countries} show={showCountry}/>
           : countries.length === 1 
           ? countries.map(c => <Country key={c.alpha2Code} country={c}/>)
-          : ''
+          : null
         }
     </div>
   );
@@ -57,5 +57,6 @@ export default App;
 
 /**
  * TODO 
- *  - Refactor the 'empty string' there on ShowCountry and on conditional rendering
+ * - Refactor the 'empty string' there on ShowCountry and on conditional rendering
+ * - Fix all red errors 
  */
