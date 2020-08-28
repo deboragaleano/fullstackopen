@@ -10,7 +10,6 @@ function Country({country}) {
         axios
           .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
           .then(resp => {
-            console.log(resp.data)
             setWeather(resp.data.current)
             setImag(resp.data.current.weather_icons)
           })
