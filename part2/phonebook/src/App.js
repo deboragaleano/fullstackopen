@@ -56,9 +56,14 @@ const App = () => {
     const pName = persons.map(p => p.name);
     const isTheSame = pName.indexOf(newName) !== -1;
     isTheSame ? alert(`${newName} is already added to the phonebook`) : 
-    setPersons([...persons, contactToAdd])
-    setNewName(''); 
-    setNewNumber(''); 
+
+    axios
+      .get('http://localhost:3001/persons', contactToAdd)
+      .then(resp => {
+        setPersons([...persons, resp.data])
+        setNewName(''); 
+        setNewNumber(''); 
+      })
   }
 
   const searchContact = (e) => {
