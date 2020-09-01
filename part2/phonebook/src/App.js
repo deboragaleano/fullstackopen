@@ -71,12 +71,14 @@ const App = () => {
   }
 
   const deleteContact = (id) => {
-    const filteredContacts = persons.filter(p => p.id !== id)
-    
+    // const filteredContacts = persons.filter(p => p.id !== id)
+    const removeContacts = persons.filter(p => 
+      p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
+    // console.log(filteredContacts)
     contact
       .remove(id)
       .then(returnedContact => {
-        setPersons(filteredContacts)
+        setPersons(removeContacts)
       })
   }
 
