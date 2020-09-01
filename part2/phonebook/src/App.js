@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
-import axios from 'axios'; 
+import contact from './services/contact'; 
 
 const Search = ({query, handleSearch, searchContact}) => {
   return (
@@ -43,10 +43,10 @@ const App = () => {
   const [ newSearch, setNewSearch] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    contact
+      .getContacts()
+      .then(contacts => {
+        setPersons(contacts)
       })
   }, [])
 
@@ -57,10 +57,10 @@ const App = () => {
     const isTheSame = pName.indexOf(newName) !== -1;
     isTheSame ? alert(`${newName} is already added to the phonebook`) : 
 
-    axios
-      .post('http://localhost:3001/persons', contactToAdd)
-      .then(resp => {
-        setPersons([...persons, resp.data])
+    contact
+      .addContact(contactToAdd)
+      .then(returnedContact => {
+        setPersons([...persons, returnedContact])
         setNewName(''); 
         setNewNumber(''); 
       })
@@ -111,7 +111,7 @@ const App = () => {
   )
 }
 
-export default App
+export default App; 
 
 /*
 TO DO:

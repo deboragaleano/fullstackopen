@@ -24,6 +24,11 @@
       "name": "This has to be added",
       "number": "151221",
       "id": 5
+    },
+    {
+      "name": "another contact",
+      "number": "21323",
+      "id": 6
     }
   ]
 }
