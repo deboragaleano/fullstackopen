@@ -71,9 +71,13 @@ const App = () => {
   }
 
   const deleteContact = (id) => {
-    const removeContacts = persons.filter(p => 
-      p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
-    setPersons(removeContacts)
+    const filteredContacts = persons.filter(p => p.id !== id)
+    
+    contact
+      .remove(id)
+      .then(returnedContact => {
+        setPersons(filteredContacts)
+      })
   }
 
   const searchContact = (e) => {
@@ -125,10 +129,3 @@ const App = () => {
 }
 
 export default App; 
-
-/*
-TO DO:
-
- - fix the filter to return results with first name only (not the whole string)
-
-*/
