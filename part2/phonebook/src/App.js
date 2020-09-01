@@ -58,7 +58,7 @@ const App = () => {
     isTheSame ? alert(`${newName} is already added to the phonebook`) : 
 
     axios
-      .get('http://localhost:3001/persons', contactToAdd)
+      .post('http://localhost:3001/persons', contactToAdd)
       .then(resp => {
         setPersons([...persons, resp.data])
         setNewName(''); 
