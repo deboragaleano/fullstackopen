@@ -28,10 +28,14 @@ const PersonFrom = ({name, number, nameChange, addContact, numberChange}) => {
   )
 }
 
-const Persons = ({persons}) => {
+const Persons = ({persons, deleteContact}) => {
   return (
   <ul>
-    {persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+    {persons.map(person => 
+    <li key={person.name}>{person.name} {person.number}
+      <button onClick={() => deleteContact(person.id)}>delete</button>
+    </li>
+    )}
   </ul>
   )
 }
@@ -58,12 +62,18 @@ const App = () => {
     isTheSame ? alert(`${newName} is already added to the phonebook`) : 
 
     contact
-      .addContact(contactToAdd)
+      .create(contactToAdd)
       .then(returnedContact => {
         setPersons([...persons, returnedContact])
         setNewName(''); 
         setNewNumber(''); 
       })
+  }
+
+  const deleteContact = (id) => {
+    const removeContacts = persons.filter(p => 
+      p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
+    setPersons(removeContacts)
   }
 
   const searchContact = (e) => {
@@ -106,7 +116,10 @@ const App = () => {
       />
       
       <h2>Numbers</h2>
-      <Persons persons={persons}/>
+      <Persons 
+        persons={persons}
+        deleteContact={deleteContact}
+        />
     </div>
   )
 }
