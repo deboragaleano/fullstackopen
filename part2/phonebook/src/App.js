@@ -90,6 +90,7 @@ const App = () => {
 
   // TODO: Check if this is correct (as for the .then returnedContact for example
   // add the catch error message 
+  // check if the returnedContact was necessary or not
   const deleteContact = (id) => {
     const removeContacts = persons.filter(p => 
       p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
