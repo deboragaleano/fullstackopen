@@ -63,11 +63,19 @@ const App = () => {
   const deleteContact = (id) => {
     const removeContacts = persons.filter(p => 
       p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
+    
+    const removedContact = persons.find(p => p.id === id)
 
     contact
       .remove(id)
       .then(returnedContact => {
         setPersons(removeContacts)
+      })
+      .catch(error => {
+        setMessage({error: true, msg: `Information of ${removedContact.name} has already been removed from server`})
+        setTimeout(() => {
+          setMessage(null)
+        }, 4000)
       })
   }
 
