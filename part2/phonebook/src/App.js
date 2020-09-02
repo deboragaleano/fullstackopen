@@ -10,7 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch] = useState('')
-  const [ errorMessage, setMessage] = useState('this is an error message')
+  const [ message, setMessage] = useState({error: false, msg: ''})
 
   useEffect(() => {
     contact
@@ -41,7 +41,7 @@ const App = () => {
         setNewName(''); 
         setNewNumber(''); 
       })
-
+      
     } else {
       contact
       .create(contactToAdd)
@@ -49,10 +49,13 @@ const App = () => {
         setPersons([...persons, returnedContact])
         setNewName(''); 
         setNewNumber(''); 
+        setMessage({error: false, msg: `Added ${newName}`})
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
     }
   }
-
 
   // TODO: Check if this is correct (as for the .then returnedContact for example
   // add the catch error message 
@@ -92,7 +95,7 @@ const App = () => {
     <div>
 
       <h1>Phonebook</h1>
-      <Notification message={errorMessage}/> 
+      <Notification message={message}/> 
       <Search 
         query={newSearch} 
         handleSearch={handleSearchName} 
@@ -106,7 +109,6 @@ const App = () => {
         addContact={addContact}
         nameChange={handleNameChange}
         numberChange={handleNumberChange}
-        persons={persons}
       />
       
       <h2>Numbers</h2>

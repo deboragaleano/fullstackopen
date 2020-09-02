@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react'; 
 
 const Notification = ({ message }) => {
     if (message === null) {
@@ -6,9 +6,15 @@ const Notification = ({ message }) => {
     }
     
     return (
-      <div className="error">
-        {message}
-      </div>
+        <>
+        {
+          message.msg !== '' ?
+          <div className={message.error ? 'error' : 'success'}>
+            {message.msg}
+          </div>
+          : null
+        }
+        </>
     )
   }
 
