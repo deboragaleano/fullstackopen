@@ -1,50 +1,16 @@
 import React, { useState, useEffect } from 'react'; 
 import contact from './services/contact'; 
-
-const Search = ({query, handleSearch, searchContact}) => {
-  return (
-    <form onSubmit={searchContact}>
-      filter shown with 
-      <input 
-        value={query} 
-        onChange={handleSearch}/>
-    </form>  
-  )
-}
-
-const PersonFrom = ({name, number, nameChange, addContact, numberChange}) => {
-  return (
-    <form>
-      <div>
-        name: <input value={name} onChange={nameChange}/>
-      </div>
-      <div>
-        number: <input value={number} onChange={numberChange}/>
-      </div>
-      <div>
-        <button onClick={addContact} type="submit">add</button>
-      </div>
-  </form>
-  )
-}
-
-const Persons = ({persons, deleteContact}) => {
-  return (
-  <ul>
-    {persons.map(person => 
-    <li key={person.name}>{person.name} {person.number}
-      <button onClick={() => deleteContact(person.id)}>delete</button>
-    </li>
-    )}
-  </ul>
-  )
-}
+import Notification from './Notification';
+import Search from './Search';
+import PersonForm from './PersonForm';
+import Persons from './Persons';
 
 const App = () => {
   const [ persons, setPersons ] = useState([ ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch] = useState('')
+  const [ errorMessage, setMessage] = useState('this is an error message')
 
   useEffect(() => {
     contact
@@ -77,13 +43,13 @@ const App = () => {
       })
 
     } else {
-        contact
-        .create(contactToAdd)
-        .then(returnedContact => {
-          setPersons([...persons, returnedContact])
-          setNewName(''); 
-          setNewNumber(''); 
-        })
+      contact
+      .create(contactToAdd)
+      .then(returnedContact => {
+        setPersons([...persons, returnedContact])
+        setNewName(''); 
+        setNewNumber(''); 
+      })
     }
   }
 
@@ -126,6 +92,7 @@ const App = () => {
     <div>
 
       <h1>Phonebook</h1>
+      <Notification message={errorMessage}/> 
       <Search 
         query={newSearch} 
         handleSearch={handleSearchName} 
@@ -133,7 +100,7 @@ const App = () => {
       />
       
       <h2>Add new</h2>
-      <PersonFrom 
+      <PersonForm 
         name={newName} 
         number={newNumber} 
         addContact={addContact}
