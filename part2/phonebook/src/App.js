@@ -54,27 +54,46 @@ const App = () => {
       })
   }, [])
 
+  // Todo: Check if this is the correct PUT request 
   const addContact = (e) => {
     e.preventDefault();
     const contactToAdd = {name: newName, number: newNumber}
     const pName = persons.map(p => p.name);
     const isTheSame = pName.indexOf(newName) !== -1;
-    isTheSame ? alert(`${newName} is already added to the phonebook`) : 
 
-    contact
-      .create(contactToAdd)
+    if(isTheSame) {
+      window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)
+      const findPerson = persons.find(p => p.name === newName ? p : null)
+      const contactToBeUpdated = {name: findPerson.name, number: newNumber}
+
+      contact
+      .update(findPerson.id, contactToBeUpdated )
       .then(returnedContact => {
-        setPersons([...persons, returnedContact])
+        const updatedPersons = persons.map(p => 
+          p.id === findPerson.id ? returnedContact : p)
+        setPersons(updatedPersons)
         setNewName(''); 
         setNewNumber(''); 
       })
+
+    } else {
+        contact
+        .create(contactToAdd)
+        .then(returnedContact => {
+          setPersons([...persons, returnedContact])
+          setNewName(''); 
+          setNewNumber(''); 
+        })
+    }
   }
 
+
+  // TODO: Check if this is correct (as for the .then returnedContact for example
+  // add the catch error message 
   const deleteContact = (id) => {
-    // const filteredContacts = persons.filter(p => p.id !== id)
     const removeContacts = persons.filter(p => 
       p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
-    // console.log(filteredContacts)
+
     contact
       .remove(id)
       .then(returnedContact => {
@@ -119,6 +138,7 @@ const App = () => {
         addContact={addContact}
         nameChange={handleNameChange}
         numberChange={handleNumberChange}
+        persons={persons}
       />
       
       <h2>Numbers</h2>
