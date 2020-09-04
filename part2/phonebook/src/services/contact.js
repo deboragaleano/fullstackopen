@@ -15,15 +15,14 @@ const create = (contact) => {
 }
 
 // remove - DELETE 
-// Check, no data is sent with the request? delete .then and what follows? 
 const remove = (id) => {
     const request = axios.delete(`${base_URL}/${id}`)
     return request.then(resp => resp.data)
 }
 
 // update - PUT 
-const update = (id, updatedObject) => {
-    const request = axios.put(`${base_URL}/${id}`, updatedObject)
+const update = (id, newObject) => {
+    const request = axios.put(`${base_URL}/${id}`, newObject)
     return request.then(resp => resp.data)
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
-import contact from './services/contact'; 
+import contactService from './services/contact'; 
 import Notification from './Notification';
 import Search from './Search';
 import PersonForm from './PersonForm';
@@ -10,21 +10,42 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch] = useState('')
-  const [ message, setMessage] = useState({error: false, msg: ''})
+  const [ alert, setAlert] = useState(null)
 
   useEffect(() => {
-    contact
+    contactService
       .getContacts()
       .then(contacts => {
         setPersons(contacts)
       })
   }, [])
 
-  // Todo: Check if this is the correct PUT request 
+  // it takes two args, the message and the type
+  const notify = (message, type='success') => {
+    setAlert({message, type});
+    setTimeout(() => {
+      setAlert(null)
+    }, 4000)
+  }
+
+  const handleNameChange = (e) => {
+    setNewName(e.target.value)
+  }
+  
+  const handleNumberChange = (e) => {
+    setNewNumber(e.target.value)
+  }
+
+  const handleSearchName = (e) => {
+    setNewSearch(e.target.value)
+  }
+
   const addContact = (e) => {
     e.preventDefault();
     const contactToAdd = {name: newName, number: newNumber}
     const pName = persons.map(p => p.name);
+    // here it could have been this other solution below to find existing contact:
+    // const isTheSame = persons.find( p => p.name === newName); 
     const isTheSame = pName.indexOf(newName) !== -1;
 
     if(isTheSame) {
@@ -32,7 +53,7 @@ const App = () => {
       const findPerson = persons.find(p => p.name === newName ? p : null)
       const contactToBeUpdated = {name: findPerson.name, number: newNumber}
 
-      contact
+      contactService
       .update(findPerson.id, contactToBeUpdated )
       .then(returnedContact => {
         const updatedPersons = persons.map(p => 
@@ -40,42 +61,35 @@ const App = () => {
         setPersons(updatedPersons)
         setNewName(''); 
         setNewNumber(''); 
+        notify(`Changed number of ${findPerson.name}`)
       })
       
     } else {
-      contact
+      contactService
       .create(contactToAdd)
-      .then(returnedContact => {
-        setPersons([...persons, returnedContact])
+      .then(addedPerson => {
+        setPersons([...persons, addedPerson])
         setNewName(''); 
         setNewNumber(''); 
-        setMessage({error: false, msg: `Added ${newName}`})
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        notify(`Added ${contactToAdd.name}`)
       })
     }
   }
 
-  // TODO: Check if this is correct (as for the .then returnedContact for example
-  // add the catch error message 
-  // check if the returnedContact was necessary or not
   const deleteContact = (id) => {
     const removeContacts = persons.filter(p => 
       p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
     
     const contactToDelete = persons.find(p => p.id === id)
 
-    contact
+    contactService
       .remove(id)
       .then(returnedContact => {
         setPersons(removeContacts)
+        notify(`${contactToDelete.name} deleted`, 'error')
       })
       .catch(error => {
-        setMessage({error: true, msg: `Information of ${contactToDelete.name} has already been removed from server`})
-        setTimeout(() => {
-          setMessage(null)
-        }, 4000)
+        notify(`Information of ${contactToDelete.name} has already been removed from server`, 'error')
       })
   }
 
@@ -87,23 +101,11 @@ const App = () => {
     setNewSearch(''); 
   }
 
-  const handleSearchName = (e) => {
-    setNewSearch(e.target.value)
-  }
-
-  const handleNameChange = (e) => {
-    setNewName(e.target.value)
-  }
-  
-  const handleNumberChange = (e) => {
-    setNewNumber(e.target.value)
-  }
-
   return (
     <div>
 
       <h1>Phonebook</h1>
-      <Notification message={message}/> 
+      <Notification notification={alert}/> 
       <Search 
         query={newSearch} 
         handleSearch={handleSearchName} 
@@ -129,3 +131,10 @@ const App = () => {
 }
 
 export default App; 
+
+/*
+CHANGES SINCE SUBMISSION:
+
+- ADDED notify function to avoid repeating setTimeout 
+
+*/
