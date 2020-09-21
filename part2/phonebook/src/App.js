@@ -42,7 +42,6 @@ const App = () => {
 
   const addContact = (e) => {
     e.preventDefault();
-    const contactToAdd = {name: newName, number: newNumber}
     const pName = persons.map(p => p.name);
     // here it could have been this other solution below to find existing contact:
     // const isTheSame = persons.find( p => p.name === newName); 
@@ -66,12 +65,13 @@ const App = () => {
       
     } else {
       contactService
-      .create(contactToAdd)
+      .create({name: newName, number: newNumber})
       .then(addedPerson => {
-        setPersons([...persons, addedPerson])
+        console.log(addedPerson);
+        setPersons(persons.concat(addedPerson))
+        notify(`Added ${newName}`)
         setNewName(''); 
         setNewNumber(''); 
-        notify(`Added ${contactToAdd.name}`)
       })
     }
   }
