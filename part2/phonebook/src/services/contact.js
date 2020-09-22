@@ -4,9 +4,10 @@ const base_URL = 'http://localhost:3001/api/persons'
 // all - GET
 const getContacts = () => {
     const request = axios.get(base_URL)
-    return request.then(resp => resp.data); 
+    return request.then(resp => {
+        return resp.data
+    }); 
 }
-
 
 // add - POST 
 const create = (contact) => {

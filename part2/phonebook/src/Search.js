@@ -1,13 +1,11 @@
 import React from 'react'; 
 
-const Search = ({query, handleSearch, searchContact}) => {
+const Search = ({query, onChange}) => {
     return (
-      <form onSubmit={searchContact}>
-        filter shown with 
         <input 
           value={query} 
-          onChange={handleSearch}/>
-      </form>  
+          onChange={onChange}
+        />  
     )
 }
 

@@ -18,7 +18,7 @@ const App = () => {
       .then(contacts => {
         setPersons(contacts)
       })
-  }, [])
+  })
 
   // it takes two args, the message and the type
   const notify = (message, type='success') => {
@@ -42,33 +42,29 @@ const App = () => {
 
   const addContact = (e) => {
     e.preventDefault();
-    const pName = persons.map(p => p.name);
-    // here it could have been this other solution below to find existing contact:
-    // const isTheSame = persons.find( p => p.name === newName); 
-    const isTheSame = pName.indexOf(newName) !== -1;
+    const isTheSame = persons.find( p => p.name === newName); 
 
     if(isTheSame) {
-      window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)
-      const findPerson = persons.find(p => p.name === newName ? p : null)
-      const contactToBeUpdated = {name: findPerson.name, number: newNumber}
-
-      contactService
-      .update(findPerson.id, contactToBeUpdated )
-      .then(returnedContact => {
-        const updatedPersons = persons.map(p => 
-          p.id === findPerson.id ? returnedContact : p)
-        setPersons(updatedPersons)
-        setNewName(''); 
-        setNewNumber(''); 
-        notify(`Changed number of ${findPerson.name}`)
-      })
-      
+      const isOk = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)
+      if(isOk) {
+        contactService
+        .update(isTheSame.id, {name: isTheSame.name, number: newNumber} )
+        .then(returnedContact => {
+          const updatedPersons = persons.map(p => 
+            p.id === isTheSame.id ? returnedContact : p)
+          setPersons(updatedPersons)
+          notify(`Changed number of ${isTheSame.name}`)
+          setNewName(''); 
+          setNewNumber(''); 
+        })
+      }
     } else {
       contactService
       .create({name: newName, number: newNumber})
       .then(addedPerson => {
-        console.log(addedPerson);
-        setPersons(persons.concat(addedPerson))
+        // console.log(addedPerson); this is already the new array!
+        // **NOTE: ADDING ANOTHER setPersons created 2 persons array and encountered nasty error with similar ID**
+        // setPersons(persons.concat(addedPerson))
         notify(`Added ${newName}`)
         setNewName(''); 
         setNewNumber(''); 
@@ -77,39 +73,36 @@ const App = () => {
   }
 
   const deleteContact = (id) => {
-    const removeContacts = persons.filter(p => 
-      p.id === id ? window.confirm(`delete ${p.name}`) ? p.id !== id : p: p)
-    
     const contactToDelete = persons.find(p => p.id === id)
+    const okToDelete = window.confirm(`delete ${contactToDelete.name}`)
 
-    contactService
+    if(okToDelete) {
+      contactService
       .remove(id)
-      .then(returnedContact => {
-        setPersons(removeContacts)
-        notify(`${contactToDelete.name} deleted`, 'error')
+      .then(response => {
+        setPersons(persons.filter(p => p.id !== id))
+        notify(`${contactToDelete.name} deleted`)
       })
-      .catch(error => {
+      .catch(() => {
+        setPersons(persons.filter(p => p.id !== id))
         notify(`Information of ${contactToDelete.name} has already been removed from server`, 'error')
       })
+    }
   }
 
-  const searchContact = (e) => {
-    e.preventDefault(); 
-    const filteredNames = persons.filter(person => person.name.toLowerCase().includes((newSearch)
-    .toLowerCase()))
-    setPersons(filteredNames); 
-    setNewSearch(''); 
-  }
+  const personsToShow = newSearch.length === 0 ?
+    persons : 
+    persons.filter(p => p.name.toLowerCase().indexOf(newSearch.toLowerCase()) > 0 )
 
   return (
     <div>
 
       <h1>Phonebook</h1>
       <Notification notification={alert}/> 
+
       <Search 
         query={newSearch} 
-        handleSearch={handleSearchName} 
-        searchContact={searchContact}
+        onChange={handleSearchName}
       />
       
       <h2>Add new</h2>
@@ -123,7 +116,7 @@ const App = () => {
       
       <h2>Numbers</h2>
       <Persons 
-        persons={persons}
+        persons={personsToShow}
         deleteContact={deleteContact}
         />
     </div>
