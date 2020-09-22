@@ -59,12 +59,13 @@ const App = () => {
         })
       }
     } else {
+      const contactToAdd = {name: newName, number: newNumber}
       contactService
-      .create({name: newName, number: newNumber})
+      .create(contactToAdd)
       .then(addedPerson => {
         // console.log(addedPerson); this is already the new array!
         // **NOTE: ADDING ANOTHER setPersons created 2 persons array and encountered nasty error with similar ID**
-        // setPersons(persons.concat(addedPerson))
+        setPersons(addedPerson);
         notify(`Added ${newName}`)
         setNewName(''); 
         setNewNumber(''); 
@@ -126,8 +127,9 @@ const App = () => {
 export default App; 
 
 /*
-CHANGES SINCE SUBMISSION:
+TODO:
 
-- ADDED notify function to avoid repeating setTimeout 
+- Fix the filter, doesn't work properly
+- Fix the new added item when it's deleted, still shows there 
 
 */
