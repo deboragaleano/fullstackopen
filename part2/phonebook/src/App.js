@@ -40,6 +40,25 @@ const App = () => {
     setNewSearch(e.target.value)
   }
 
+  const deleteContact = (id) => {
+    const contactToDelete = persons.find(p => p.id === id)
+    const okToDelete = window.confirm(`delete ${contactToDelete.name}`)
+
+    if(okToDelete) {
+      contactService
+      .remove(id)
+      .then(response => {
+        setPersons(persons.filter(p => p.id !== id))
+        notify(`${contactToDelete.name} deleted`)
+        // console.log(persons)
+      })
+      .catch(() => {
+        // setPersons(persons.filter(p => p.id !== id))
+        notify(`Information of ${contactToDelete.name} has already been removed from server`, 'error')
+      })
+    }
+  }
+
   const addContact = (e) => {
     e.preventDefault();
     const isTheSame = persons.find( p => p.name === newName); 
@@ -58,35 +77,15 @@ const App = () => {
           setNewNumber(''); 
         })
       }
+
     } else {
-      const contactToAdd = {name: newName, number: newNumber}
       contactService
-      .create(contactToAdd)
+      .create({name: newName, number: newNumber})
       .then(addedPerson => {
-        // console.log(addedPerson); this is already the new array!
-        // **NOTE: ADDING ANOTHER setPersons created 2 persons array and encountered nasty error with similar ID**
-        setPersons(addedPerson);
+        setPersons(persons.concat(addedPerson))
         notify(`Added ${newName}`)
-        setNewName(''); 
-        setNewNumber(''); 
-      })
-    }
-  }
-
-  const deleteContact = (id) => {
-    const contactToDelete = persons.find(p => p.id === id)
-    const okToDelete = window.confirm(`delete ${contactToDelete.name}`)
-
-    if(okToDelete) {
-      contactService
-      .remove(id)
-      .then(response => {
-        setPersons(persons.filter(p => p.id !== id))
-        notify(`${contactToDelete.name} deleted`)
-      })
-      .catch(() => {
-        setPersons(persons.filter(p => p.id !== id))
-        notify(`Information of ${contactToDelete.name} has already been removed from server`, 'error')
+        setNewName('')
+        setNewNumber('') 
       })
     }
   }
