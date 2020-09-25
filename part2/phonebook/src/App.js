@@ -18,7 +18,7 @@ const App = () => {
       .then(contacts => {
         setPersons(contacts)
       })
-  })
+  }, [])
 
   // it takes two args, the message and the type
   const notify = (message, type='success') => {
@@ -61,18 +61,18 @@ const App = () => {
 
   const addContact = (e) => {
     e.preventDefault();
-    const isTheSame = persons.find( p => p.name === newName); 
+    const existing = persons.find( p => p.name === newName); 
 
-    if(isTheSame) {
+    if(existing) {
       const isOk = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one`)
-      if(isOk) {
+      if(isOk) { 
         contactService
-        .update(isTheSame.id, {name: isTheSame.name, number: newNumber} )
+        .update(existing.id, {name: existing.name, number: newNumber} )
         .then(returnedContact => {
           const updatedPersons = persons.map(p => 
-            p.id === isTheSame.id ? returnedContact : p)
+            p.id === existing.id ? returnedContact : p)
           setPersons(updatedPersons)
-          notify(`Changed number of ${isTheSame.name}`)
+          notify(`Changed number of ${existing.name}`)
           setNewName(''); 
           setNewNumber(''); 
         })
@@ -87,12 +87,19 @@ const App = () => {
         setNewName('')
         setNewNumber('') 
       })
+      .catch(error => {
+        //this is how we access the error message
+        notify(error.response.data.error, 'error')
+      })
     }
   }
 
+  // adding greater or equal to 0 means that the name should be in the array
+  // if it's -1 then it means that it's not 
   const personsToShow = newSearch.length === 0 ?
     persons : 
-    persons.filter(p => p.name.toLowerCase().indexOf(newSearch.toLowerCase()) > 0 )
+    persons.filter(p => p.name.toLowerCase().indexOf(newSearch.toLowerCase()) >= 0 ) 
+
 
   return (
     <div>
@@ -102,7 +109,7 @@ const App = () => {
 
       <Search 
         query={newSearch} 
-        onChange={handleSearchName}
+        handleSearchName={handleSearchName}
       />
       
       <h2>Add new</h2>
@@ -124,11 +131,3 @@ const App = () => {
 }
 
 export default App; 
-
-/*
-TODO:
-
-- Fix the filter, doesn't work properly
-- Fix the new added item when it's deleted, still shows there 
-
-*/

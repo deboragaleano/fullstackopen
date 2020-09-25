@@ -1,10 +1,10 @@
 import React from 'react'; 
 
-const Search = ({query, onChange}) => {
+const Search = (props) => {
     return (
         <input 
-          value={query} 
-          onChange={onChange}
+          value={props.query} 
+          onChange={props.handleSearchName}
         />  
     )
 }
